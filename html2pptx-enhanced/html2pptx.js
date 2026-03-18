@@ -36,6 +36,7 @@ const { GradientRegistry, postprocess } = require('./gradient-postprocess');
 const { parseGradient, getFallbackColor, hasGradient } = require('./gradient-parser');
 const { captureElements } = require('./element-screenshot');
 const { handleOverflow } = require('./overflow-handler');
+const sharp = require('sharp');
 
 const PT_PER_PX = 0.75;
 const PX_PER_IN = 96;
@@ -871,10 +872,20 @@ async function html2pptx(htmlFile, pres, options = {}) {
     // overflow 错误的处理取决于模式
     if (overflowMode === 'error') {
       validationErrors.push(...overflowErrors);
-      // 原有的 textBoxPosition 校验也只在 error 模式下执行
       validationErrors.push(...validateTextBoxPosition(slideData, bodyDimensions));
+    } else {
+      // expand/clip 模式：overflow 本身不报错
+      // Bug Fix: 但如果内容实际未超出（didTransform 将为 false），
+      // textBoxPosition 仍应校验（避免静默放过真正的布局问题）
+      // 注意：此时 overflow 还未运行，用 bodyDimensions 做粗略判断
+      const contentHIn = bodyDimensions.scrollHeight / PX_PER_IN;
+      const slideHIn   = pres.presLayout ? pres.presLayout.height / EMU_PER_IN : Infinity;
+      const isActuallyOverflow = (contentHIn - slideHIn) / slideHIn > 0.02;
+      if (!isActuallyOverflow) {
+        validationErrors.push(...validateTextBoxPosition(slideData, bodyDimensions));
+      }
+      // 真正 overflow 时跳过 textBoxPosition，因为 expand/clip 会处理
     }
-    // expand / clip 模式：忽略 overflow 错误和 textBoxPosition 警告
 
     if (validationErrors.length > 0) {
       const msg = validationErrors.length === 1
@@ -926,7 +937,7 @@ async function html2pptx(htmlFile, pres, options = {}) {
     const { scale: ovScale, offsetX: ovOffsetX } = overflowResult;
     const screenshotWarnings = [];
 
-    for (const captured of capturedElements) {
+    for (let captured of capturedElements) {
       if (!captured.dataUrl) {
         screenshotWarnings.push(
           `${captured.tag} "${captured.objectName}": screenshot failed — ${captured.error || 'unknown'}`
@@ -945,11 +956,34 @@ async function html2pptx(htmlFile, pres, options = {}) {
             h: pos.h * ovScale,
           };
         } else if (overflowMode === 'clip') {
-          // clip 模式：超出底部的截图也丢弃
-          const EMU_PER_IN = 914400;
+          // clip 模式：超出底部的截图丢弃或裁切
           const slideH = pres.presLayout.height / EMU_PER_IN;
           if (pos.y >= slideH) continue; // 完全超出，跳过
-          if (pos.y + pos.h > slideH) pos.h = slideH - pos.y; // 截断
+          if (pos.y + pos.h > slideH) {
+            const originalH = pos.h;
+            pos.h = slideH - pos.y;
+            // Bug Fix: PNG 也要同比裁切，否则图片会在垂直方向压扁变形
+            // pptxgenjs 不设 sizing 时直接按 w×h 拉伸图片
+            const keepRatio = pos.h / originalH;
+            if (captured.pngBuffer && keepRatio < 0.99) {
+              try {
+                const meta = await sharp(captured.pngBuffer).metadata();
+                const keepPx = Math.max(1, Math.round(meta.height * keepRatio));
+                const croppedBuf = await sharp(captured.pngBuffer)
+                  .extract({ left: 0, top: 0, width: meta.width, height: keepPx })
+                  .png({ compressionLevel: 6 })
+                  .toBuffer();
+                captured = {
+                  ...captured,
+                  dataUrl: 'image/png;base64,' + croppedBuf.toString('base64'),
+                  pngBuffer: croppedBuf,
+                };
+              } catch (e) {
+                console.warn('[html2pptx] clip screenshot crop failed:', e.message);
+                // 裁切失败退回原图，宁可变形也不丢失内容
+              }
+            }
+          }
         }
       }
 

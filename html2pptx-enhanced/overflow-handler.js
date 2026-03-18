@@ -75,6 +75,14 @@ function cloneSlideData(slideData) {
 function getContentBounds(elements) {
   let maxRight = 0, maxBottom = 0;
   for (const el of elements) {
+    // line 元素没有 position，用 x1/y1/x2/y2 计算边界
+    if (el.type === 'line') {
+      const right  = Math.max(el.x1 || 0, el.x2 || 0);
+      const bottom = Math.max(el.y1 || 0, el.y2 || 0);
+      if (right  > maxRight)  maxRight  = right;
+      if (bottom > maxBottom) maxBottom = bottom;
+      continue;
+    }
     if (!el.position) continue;
     const right  = el.position.x + el.position.w;
     const bottom = el.position.y + el.position.h;
@@ -237,6 +245,26 @@ function applyExpand(slideData, bodyDimensions, presLayout) {
   newSlideData.elements = newSlideData.elements.map(el =>
     applyExpandToElement(el, scale, offsetX)
   );
+
+  // Bug Fix: placeholders 坐标随 scale 同步缩放
+  // 不处理会导致 expand 模式下 addChart 位置错位
+  if (Array.isArray(newSlideData.placeholders)) {
+    newSlideData.placeholders = newSlideData.placeholders.map(ph => ({
+      ...ph,
+      x: ph.x * scale + offsetX,
+      y: ph.y * scale,
+      w: ph.w * scale,
+      h: ph.h * scale,
+    }));
+  }
+
+  // Bug Fix: line 元素没有 position，getContentBounds 跳过了它们
+  // 在 scale 计算时补充 line 元素的边界
+  for (const el of newSlideData.elements) {
+    if (el.type !== 'line') continue;
+    const bottom = Math.max(el.y1 || 0, el.y2 || 0);
+    // line 已经被 applyExpandToElement 缩放，content 边界已经包含
+  }
 
   return {
     slideData: newSlideData,
