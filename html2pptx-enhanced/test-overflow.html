@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  width: 720pt;
+  /* 故意不设 height，让内容撑开 → overflow */
+  font-family: system-ui, -apple-system, "PingFang SC", sans-serif;
+  background: #FEFEF9;
+  overflow: visible;   /* 允许溢出 */
+  position: relative;
+}
+</style>
+</head>
+<body>
+
+<!-- 区块1：标题（在画布内 0-80pt） -->
+<div style="position:absolute;top:20pt;left:24pt;right:24pt;height:52pt;background:#1A4A8A;border-radius:6pt;">
+  <h1 style="position:absolute;top:14pt;left:20pt;font-size:22pt;color:#FFFFFF;font-weight:700;">
+    季度业绩汇报
+  </h1>
+  <p style="position:absolute;top:36pt;left:20pt;font-size:11pt;color:rgba(255,255,255,0.8);">
+    2026年 Q1 全渠道综合分析报告
+  </p>
+</div>
+
+<!-- 区块2：三个 KPI 卡片（100-200pt） -->
+<div style="position:absolute;top:88pt;left:24pt;width:212pt;height:96pt;background:#F0F5FF;border:1.5pt solid #1A4A8A;border-radius:6pt;">
+  <p style="position:absolute;top:14pt;left:16pt;font-size:9pt;color:#888;font-weight:600;text-transform:uppercase;">营业收入</p>
+  <p style="position:absolute;top:30pt;left:16pt;font-size:26pt;color:#1A4A8A;font-weight:700;">¥2,340万</p>
+  <p style="position:absolute;top:68pt;left:16pt;font-size:9pt;color:#2E7D32;">↑ 同比 +17%</p>
+</div>
+<div style="position:absolute;top:88pt;left:254pt;width:212pt;height:96pt;background:#FFF5F5;border:1.5pt solid #FF3B4F;border-radius:6pt;">
+  <p style="position:absolute;top:14pt;left:16pt;font-size:9pt;color:#888;font-weight:600;text-transform:uppercase;">新增用户</p>
+  <p style="position:absolute;top:30pt;left:16pt;font-size:26pt;color:#FF3B4F;font-weight:700;">18,600</p>
+  <p style="position:absolute;top:68pt;left:16pt;font-size:9pt;color:#2E7D32;">↑ 同比 +24%</p>
+</div>
+<div style="position:absolute;top:88pt;left:484pt;width:212pt;height:96pt;background:#FFFBF0;border:1.5pt solid #FFD700;border-radius:6pt;">
+  <p style="position:absolute;top:14pt;left:16pt;font-size:9pt;color:#888;font-weight:600;text-transform:uppercase;">净利润率</p>
+  <p style="position:absolute;top:30pt;left:16pt;font-size:26pt;color:#856404;font-weight:700;">23.4%</p>
+  <p style="position:absolute;top:68pt;left:16pt;font-size:9pt;color:#2E7D32;">↑ 同比 +3.4pp</p>
+</div>
+
+<!-- 区块3：分析文字（200-290pt） -->
+<div style="position:absolute;top:200pt;left:24pt;width:440pt;">
+  <h2 style="font-size:14pt;color:#1A1A1A;font-weight:700;margin-bottom:8pt;">核心增长驱动因素</h2>
+  <ul style="font-size:10pt;color:#444;line-height:1.7;padding-left:20pt;">
+    <li>直播电商贡献增量 GMV 占比达 38%，较上季度提升 12pp</li>
+    <li>新市场（华南区域）贡献收入 ¥420 万，完成率 140%</li>
+    <li>会员复购率由 61% 提升至 67%，LTV 同步上涨</li>
+    <li>供应链优化降低履约成本 8.5%，毛利率结构性改善</li>
+  </ul>
+</div>
+
+<!-- 区块4：数据表格（300-420pt，部分超出画布 405pt） -->
+<div style="position:absolute;top:300pt;left:24pt;width:672pt;">
+  <h2 style="font-size:12pt;color:#1A1A1A;font-weight:700;margin-bottom:8pt;">渠道明细数据</h2>
+  <table style="width:100%;border-collapse:collapse;font-size:9.5pt;">
+    <thead>
+      <tr>
+        <th style="background:#1A4A8A;color:#FFF;padding:5pt 8pt;text-align:left;border:1pt solid #1A4A8A;">渠道</th>
+        <th style="background:#1A4A8A;color:#FFF;padding:5pt 8pt;text-align:right;border:1pt solid #1A4A8A;">收入（万）</th>
+        <th style="background:#1A4A8A;color:#FFF;padding:5pt 8pt;text-align:right;border:1pt solid #1A4A8A;">同比</th>
+        <th style="background:#1A4A8A;color:#FFF;padding:5pt 8pt;text-align:right;border:1pt solid #1A4A8A;">占比</th>
+        <th style="background:#1A4A8A;color:#FFF;padding:5pt 8pt;text-align:left;border:1pt solid #1A4A8A;">趋势</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:5pt 8pt;border:1pt solid #D0D0D0;background:#fff;">直播电商</td>
+        <td style="padding:5pt 8pt;border:1pt solid #D0D0D0;text-align:right;background:#fff;">889</td>
+        <td style="padding:5pt 8pt;border:1pt solid #D0D0D0;text-align:right;color:#2E7D32;background:#fff;">+52%</td>
+        <td style="padding:5pt 8pt;border:1pt solid #D0D0D0;text-align:right;background:#fff;">38%</td>
+        <td style="padding:5pt 8pt;border:1pt solid #D0D0D0;background:#fff;">↑↑ 强势</td>
+      </tr>
+      <tr>
+        <td style="padding:5pt 8pt;border:1pt solid #D0D0D0;background:#F8F8F8;">搜索广告</td>
+        <td style="padding:5pt 8pt;border:1pt solid #D0D0D0;text-align:right;background:#F8F8F8;">468</td>
+        <td style="padding:5pt 8pt;border:1pt solid #D0D0D0;text-align:right;color:#2E7D32;background:#F8F8F8;">+18%</td>
+        <td style="padding:5pt 8pt;border:1pt solid #D0D0D0;text-align:right;background:#F8F8F8;">20%</td>
+        <td style="padding:5pt 8pt;border:1pt solid #D0D0D0;background:#F8F8F8;">↑ 稳健</td>
+      </tr>
+      <tr>
+        <td style="padding:5pt 8pt;border:1pt solid #D0D0D0;background:#fff;">线下门店</td>
+        <td style="padding:5pt 8pt;border:1pt solid #D0D0D0;text-align:right;background:#fff;">374</td>
+        <td style="padding:5pt 8pt;border:1pt solid #D0D0D0;text-align:right;color:#856404;background:#fff;">+6%</td>
+        <td style="padding:5pt 8pt;border:1pt solid #D0D0D0;text-align:right;background:#fff;">16%</td>
+        <td style="padding:5pt 8pt;border:1pt solid #D0D0D0;background:#fff;">→ 平稳</td>
+      </tr>
+      <tr>
+        <td style="padding:5pt 8pt;border:1pt solid #D0D0D0;background:#F8F8F8;">社群私域</td>
+        <td style="padding:5pt 8pt;border:1pt solid #D0D0D0;text-align:right;background:#F8F8F8;">421</td>
+        <td style="padding:5pt 8pt;border:1pt solid #D0D0D0;text-align:right;color:#2E7D32;background:#F8F8F8;">+28%</td>
+        <td style="padding:5pt 8pt;border:1pt solid #D0D0D0;text-align:right;background:#F8F8F8;">18%</td>
+        <td style="padding:5pt 8pt;border:1pt solid #D0D0D0;background:#F8F8F8;">↑ 快速</td>
+      </tr>
+      <tr>
+        <td style="padding:5pt 8pt;border:1pt solid #D0D0D0;background:#fff;">其他渠道</td>
+        <td style="padding:5pt 8pt;border:1pt solid #D0D0D0;text-align:right;background:#fff;">188</td>
+        <td style="padding:5pt 8pt;border:1pt solid #D0D0D0;text-align:right;color:#C62828;background:#fff;">-4%</td>
+        <td style="padding:5pt 8pt;border:1pt solid #D0D0D0;text-align:right;background:#fff;">8%</td>
+        <td style="padding:5pt 8pt;border:1pt solid #D0D0D0;background:#fff;">↓ 收缩</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 区块5：底部说明（450pt，明显超出画布） -->
+<div style="position:absolute;top:450pt;left:24pt;right:24pt;border-top:1pt solid #E0E0E0;padding-top:6pt;">
+  <p style="font-size:8.5pt;color:#999;">
+    数据来源：业务中台系统 · 统计截止日期：2026年3月31日 · 仅供内部参考，不作为对外披露依据
+  </p>
+</div>
+
+</body>
+</html>

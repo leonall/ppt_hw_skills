@@ -1,0 +1,17 @@
+{
+  "name": "html2pptx-enhanced",
+  "version": "2.0.0",
+  "description": "Convert HTML slides to PPTX — with table, gradient, canvas/SVG screenshot, and overflow handling support",
+  "main": "html2pptx.js",
+  "scripts": {
+    "test:unit": "node test-gradient.js && node test-screenshot-logic.js && node test-overflow.js",
+    "test:e2e": "node test-e2e-charts.js && node test-overflow.js",
+    "test": "npm run test:unit"
+  },
+  "dependencies": {
+    "jszip": "^3.10.1",
+    "playwright": "^1.40.0",
+    "pptxgenjs": "^3.12.0",
+    "sharp": "^0.33.0"
+  }
+}

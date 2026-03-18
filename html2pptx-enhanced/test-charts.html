@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  width: 720pt;
+  height: 405pt;
+  font-family: system-ui, -apple-system, "PingFang SC", sans-serif;
+  background: #FEFEF9;
+  overflow: hidden;
+  position: relative;
+}
+h2 {
+  position: absolute;
+  top: 14pt;
+  left: 20pt;
+  font-size: 18pt;
+  color: #1A1A1A;
+  font-weight: 700;
+}
+.label {
+  position: absolute;
+  font-size: 8pt;
+  color: #888;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+</style>
+</head>
+<body>
+
+<h2>图表与 SVG 截图测试</h2>
+<p style="position:absolute;top:40pt;left:20pt;font-size:10pt;color:#555">
+  三种图表类型：Canvas 柱状图、SVG 折线图、模拟 ECharts（延迟渲染）
+</p>
+
+<!-- ① Canvas 柱状图（原生 2D context） -->
+<span class="label" style="top:68pt;left:20pt">Canvas 柱状图</span>
+<canvas id="bar-chart" width="280" height="160"
+        style="position:absolute;top:80pt;left:20pt;border:1pt solid #E0E0E0;border-radius:4pt">
+</canvas>
+
+<!-- ② SVG 折线图 -->
+<span class="label" style="top:68pt;left:340pt">SVG 折线图</span>
+<svg id="line-chart" width="330" height="160"
+     style="position:absolute;top:80pt;left:340pt;border:1pt solid #E0E0E0;border-radius:4pt"
+     xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景 -->
+  <rect width="330" height="160" fill="#FAFAFA" rx="3"/>
+  <!-- 网格线 -->
+  <line x1="40" y1="20"  x2="40"  y2="140" stroke="#E0E0E0" stroke-width="0.5"/>
+  <line x1="40" y1="140" x2="320" y2="140" stroke="#E0E0E0" stroke-width="0.5"/>
+  <line x1="40" y1="100" x2="320" y2="100" stroke="#E8E8E8" stroke-width="0.5" stroke-dasharray="3 3"/>
+  <line x1="40" y1="60"  x2="320" y2="60"  stroke="#E8E8E8" stroke-width="0.5" stroke-dasharray="3 3"/>
+  <!-- 数据折线 -->
+  <polyline
+    points="60,120 110,90 160,100 210,55 260,70 310,40"
+    fill="none" stroke="#1A4A8A" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+  <!-- 面积填充 -->
+  <polygon
+    points="60,120 110,90 160,100 210,55 260,70 310,40 310,140 60,140"
+    fill="#1A4A8A" fill-opacity="0.1"/>
+  <!-- 数据点 -->
+  <circle cx="60"  cy="120" r="4" fill="#1A4A8A"/>
+  <circle cx="110" cy="90"  r="4" fill="#1A4A8A"/>
+  <circle cx="160" cy="100" r="4" fill="#1A4A8A"/>
+  <circle cx="210" cy="55"  r="4" fill="#FF3B4F"/>
+  <circle cx="260" cy="70"  r="4" fill="#1A4A8A"/>
+  <circle cx="310" cy="40"  r="4" fill="#1A4A8A"/>
+  <!-- 最高点标注 -->
+  <text x="210" y="48" text-anchor="middle" font-size="9" fill="#FF3B4F" font-weight="600">峰值</text>
+  <!-- X 轴标签 -->
+  <text x="60"  y="155" text-anchor="middle" font-size="9" fill="#888">1月</text>
+  <text x="110" y="155" text-anchor="middle" font-size="9" fill="#888">2月</text>
+  <text x="160" y="155" text-anchor="middle" font-size="9" fill="#888">3月</text>
+  <text x="210" y="155" text-anchor="middle" font-size="9" fill="#888">4月</text>
+  <text x="260" y="155" text-anchor="middle" font-size="9" fill="#888">5月</text>
+  <text x="310" y="155" text-anchor="middle" font-size="9" fill="#888">6月</text>
+  <!-- Y 轴标签 -->
+  <text x="35" y="143" text-anchor="end" font-size="9" fill="#888">0</text>
+  <text x="35" y="103" text-anchor="end" font-size="9" fill="#888">50</text>
+  <text x="35" y="63"  text-anchor="end" font-size="9" fill="#888">100</text>
+  <!-- 标题 -->
+  <text x="165" y="14" text-anchor="middle" font-size="10" fill="#1A1A1A" font-weight="600">月度增长趋势</text>
+</svg>
+
+<!-- ③ 模拟 ECharts（用 setTimeout 延迟 400ms 渲染，测试等待机制） -->
+<span class="label" style="top:260pt;left:20pt">模拟 ECharts（延迟渲染）</span>
+<canvas id="echarts-mock" width="300" height="120"
+        data-h2p-wait="flag"
+        style="position:absolute;top:272pt;left:20pt;border:1pt solid #E0E0E0;border-radius:4pt">
+</canvas>
+
+<!-- ④ 纯 CSS + SVG 的饼图（测试复杂 SVG） -->
+<span class="label" style="top:260pt;left:350pt">SVG 饼图</span>
+<svg id="pie-chart" width="280" height="120"
+     style="position:absolute;top:272pt;left:350pt"
+     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 120">
+  <!-- 饼图（用 stroke-dasharray 实现） -->
+  <circle cx="60" cy="60" r="50" fill="#F5F5F5"/>
+  <!-- 45% 蓝色 -->
+  <circle cx="60" cy="60" r="40" fill="transparent"
+          stroke="#1A4A8A" stroke-width="20"
+          stroke-dasharray="113 251" stroke-dashoffset="0"
+          transform="rotate(-90 60 60)"/>
+  <!-- 30% 红色 -->
+  <circle cx="60" cy="60" r="40" fill="transparent"
+          stroke="#FF3B4F" stroke-width="20"
+          stroke-dasharray="75 251" stroke-dashoffset="-113"
+          transform="rotate(-90 60 60)"/>
+  <!-- 25% 金色 -->
+  <circle cx="60" cy="60" r="40" fill="transparent"
+          stroke="#FFD700" stroke-width="20"
+          stroke-dasharray="63 251" stroke-dashoffset="-188"
+          transform="rotate(-90 60 60)"/>
+  <!-- 中心白圆 -->
+  <circle cx="60" cy="60" r="30" fill="white"/>
+  <text x="60" y="65" text-anchor="middle" font-size="10" fill="#1A1A1A" font-weight="700">总计</text>
+  <!-- 图例 -->
+  <rect x="130" y="25" width="10" height="10" fill="#1A4A8A" rx="2"/>
+  <text x="145" y="35" font-size="10" fill="#333">产品A — 45%</text>
+  <rect x="130" y="50" width="10" height="10" fill="#FF3B4F" rx="2"/>
+  <text x="145" y="60" font-size="10" fill="#333">产品B — 30%</text>
+  <rect x="130" y="75" width="10" height="10" fill="#FFD700" rx="2"/>
+  <text x="145" y="85" font-size="10" fill="#333">产品C — 25%</text>
+</svg>
+
+<script>
+// ① Canvas 柱状图绘制
+(function drawBarChart() {
+  const canvas = document.getElementById('bar-chart');
+  const ctx = canvas.getContext('2d');
+  const data = [65, 80, 55, 90, 72, 88];
+  const labels = ['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6'];
+  const colors = ['#1A4A8A', '#1A4A8A', '#1A4A8A', '#FF3B4F', '#1A4A8A', '#1A4A8A'];
+  const W = canvas.width, H = canvas.height;
+  const padL = 30, padB = 25, padT = 15, padR = 10;
+  const chartW = W - padL - padR;
+  const chartH = H - padB - padT;
+  const barW = chartW / data.length * 0.6;
+  const gap  = chartW / data.length;
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#FAFAFA';
+  ctx.fillRect(0, 0, W, H);
+
+  // 网格
+  ctx.strokeStyle = '#E8E8E8';
+  ctx.lineWidth = 0.5;
+  [0.25, 0.5, 0.75, 1].forEach(t => {
+    const y = padT + chartH * (1 - t);
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
+    ctx.fillStyle = '#999'; ctx.font = '9px system-ui';
+    ctx.textAlign = 'right';
+    ctx.fillText(Math.round(100 * t), padL - 4, y + 3);
+  });
+
+  // 柱子
+  data.forEach((v, i) => {
+    const x = padL + gap * i + (gap - barW) / 2;
+    const barH = chartH * v / 100;
+    const y = padT + chartH - barH;
+    ctx.fillStyle = colors[i];
+    ctx.fillRect(x, y, barW, barH);
+    // 数值标签
+    ctx.fillStyle = '#333'; ctx.font = 'bold 9px system-ui'; ctx.textAlign = 'center';
+    ctx.fillText(v + '%', x + barW / 2, y - 4);
+    // X 轴标签
+    ctx.fillStyle = '#888'; ctx.font = '9px system-ui';
+    ctx.fillText(labels[i], x + barW / 2, H - 6);
+  });
+
+  // 标题
+  ctx.fillStyle = '#1A1A1A'; ctx.font = 'bold 10px system-ui'; ctx.textAlign = 'center';
+  ctx.fillText('季度完成率', W / 2, 12);
+})();
+
+// ③ 模拟 ECharts 延迟渲染
+setTimeout(function() {
+  const canvas = document.getElementById('echarts-mock');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  // 模拟 ECharts 渐变背景
+  const grad = ctx.createLinearGradient(0, 0, W, 0);
+  grad.addColorStop(0, '#0F0C29');
+  grad.addColorStop(1, '#302B63');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // 模拟折线
+  const pts = [20,80, 60,50, 100,65, 140,30, 180,45, 220,25, 260,40, 285,20];
+  ctx.strokeStyle = '#FFD700'; ctx.lineWidth = 2; ctx.lineJoin = 'round';
+  ctx.beginPath();
+  for (let i = 0; i < pts.length; i += 2) {
+    if (i === 0) ctx.moveTo(pts[i], pts[i+1]);
+    else ctx.lineTo(pts[i], pts[i+1]);
+  }
+  ctx.stroke();
+
+  // 发光点
+  ctx.fillStyle = '#FF3B4F';
+  ctx.beginPath(); ctx.arc(140, 30, 5, 0, Math.PI * 2); ctx.fill();
+
+  // 标题
+  ctx.fillStyle = 'white'; ctx.font = 'bold 11px system-ui'; ctx.textAlign = 'center';
+  ctx.fillText('ECharts 实时数据（模拟）', W / 2, 16);
+  ctx.fillStyle = '#FFD700'; ctx.font = '9px system-ui';
+  ctx.fillText('最低点: 20  ↑ 峰值: 85', W / 2, H - 8);
+
+  // 通知截图模块：渲染完成
+  window._h2p_ready = true;
+}, 400);
+</script>
+</body>
+</html>
